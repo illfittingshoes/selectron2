@@ -1,0 +1,79 @@
+<h1 id="selectron-2-lightweight-select-enhancement">Selectron 2: <span class="subtitle">Lightweight <code>&lt;select&gt;</code> Enhancement</span></h1>
+<h2 id="features-and-whatnot">Features and Whatnot</h2>
+<p>Selectron 2 is a <code>select</code> enhancement JQuery plugin. I call it &quot;enhancement&quot; instead of &quot;replacement&quot; because it's not really <em>replacing</em> so much as &quot;looking sharp and taking all the credit, while the original <code>select</code> toils on, thanklessly, IN THE SHADOWS.&quot; Anyway, here's Selectron 2's whole deal:</p>
+<ul>
+<li><strong>Small and Light</strong>: 6KB or so minified (before gzip). Selectron is lazy: it leaves the heavy lifting to the original <code>select</code>, and basically acts as a proxy between the <code>select</code> and the user.</li>
+<li><strong>Accessible</strong>: All keyboard controls maintained, including/especially tabbing and tab order.</li>
+<li><strong>CMS-friendly</strong>: Just add a <code>data-selectron</code> attribute, and you're done (optionally passing in any settings) to any <code>select</code> with a name.</li>
+<li><strong>Stylish</strong>: Each Selectron dropdown contains enough elements to apply plenty of CSS. And if you need any to be a unique snowflake, one of the settings is &quot;(css) classes&quot;. Also, each option item's text can be upgraded to full HTML via a <code>data-label</code> attribute.</li>
+<li><strong>Accommodating</strong>: Use JS to Selectron every select everywhere, or every <code>select</code> inside a given element. Or do it on a per-<code>select</code> basis with JS or HTML. You can pass in custom settings either way, and you can even overwrite the first settings with new ones.</li>
+</ul>
+<p><a href="#demo">See it in Action</a>.</p>
+<h3 id="behavior-select-vs.-selectron">Behavior: <code>select</code> vs. Selectron</h3>
+<p>Most <code>select</code> behavior is reliable, but there are exceptions. Selectron (largely) normalizes existing <code>select</code> behavior. Here are some variations I've noticed in the Windows ecosystem:</p>
+<ul>
+<li><strong>Firefox: Double-click option list toggle</strong>. In FF (as of FF37), a single click will always show the option lits. A double-click is required to hide the options list. All others toggle on a single click. In Developer Edition (40), this behavior is absent... but the option list doesn't look right, so it may not be intentional or permanent.</li>
+<li><strong>Chrome: Enter key toggles option list</strong>. IE &amp; FF do nothing when enter is pressed, unless the list is already open.</li>
+<li><strong>IE, Firefox, Chrome: Hovered-over item treated differently</strong>. In Firefox &amp; Chrome, the hovered-over option appears to become the selected item. If you press Enter in either browser, that item becomes selected. In Firefox, the same happens when you press Tab and the next tab-able item is focused. In Chrome, when you hover over an option and press Tab, the hovered-over option becomes the selected item and focus stays on that <code>select</code>. In IE, there's a separate &quot;hover&quot; state visible, and the only way to change options with the keyboard is the arrow keys: Enter, Tab, and Escape all close the dropdown without changing anything, and if Tab was pressed, focus goes to the next tab-able element.</li>
+</ul>
+<p>For the first two above, Selectron follows the majority. In the third (weirdly disparate) case, it behaves identically to IE. Generally, it tries to do the expected thing. However...</p>
+<h4 id="exceptions-to-the-rule">Exceptions to the Rule</h4>
+<p>There are a couple cases where it deviates from any known native <code>select</code> implementation:</p>
+<ul>
+<li><strong>Menu never expands upwards, or (more obviously) outside the browser</strong>. All browsers seem to have the same logic to show <code>select</code> lists: &quot;Go downwards unless you hit the bottom of the usable screen (even if it goes outside the browser). Otherwise, go upwards&quot;.</li>
+<li><strong>Menu doesn't hide upon scrolling</strong>. Sometimes the Selectron menu causes downward scrolling. Due to chunkier-than-native styling, this happens even quicker than it would otherwise.</li>
+</ul>
+<h2 id="background">Background</h2>
+<h3 id="selectron-the-elder">Selectron, The Elder</h3>
+<p>The first incarnation of Selectron was born from requirements: no compromise on style or accessibility. I couldn't find a <code>select</code> replacement that fit the bill, so I wrote my own with a few core principles:</p>
+<ul>
+<li><strong>Let the Original <code>select</code> Do Its Thing</strong>: All the existing <code>select</code> replacements I could find reinvented the entire <code>select</code> wheel in JavaScript... poorly. I realized full accessibility was only possible if the original element stayed in the mix, and as a bonus performance was great. It's the Selectron Secret Sauce.</li>
+<li><strong>Provide many paths to Selectronification</strong>: No <code>select</code> is touched without express intent, which can be done a few different ways:
+<ul>
+<li>HTML: <code>data-selectron</code> attribute</li>
+<li>JS
+<ul>
+<li>Target a <code>select</code> directly.</li>
+<li>Target an container element that has one or more <code>select</code>s anywhere inside it, no matter how deep.</li>
+<li>Update any existing Selectron(s) with new, custom settings</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Use HTML5 data-* attributes for maximum robustitude</strong>: Any <code>select</code> with the <code>data-selectron</code> attribute will be gussied-up when the plugin loads, no extra JS hooks required. You can also pass settings via the attribute:</p>
+<pre><code>data-selectron=&#39;{&quot;settingName&quot;: &quot;value&quot;}&#39;</code></pre>
+<p>Additionally, you can upgrade any option text to HTML by putting it in a <code>data-label</code> attribute.</p></li>
+<li><p><strong>Do As Little Work As Possible</strong>: It was a conscious goal to be low-impact. For instance, only a small handful of event handlers are created, no matter how many Selectrons are on a page. The original did pretty well, but JQuery animations, IE7+ support, and my own JS limitations at the time hobbled it to a degree.</p></li>
+</ul>
+<h3 id="second-round-divergence-from-the-progenitor">Second Round: Divergence from the Progenitor</h3>
+<p>Selectron 2 is a lean, trimmed-down successor to the first Selectron. So what has changed? Short version: it's faster and ditches some unused and bloated features.</p>
+<ul>
+<li><strong>Ditched JQuery animations</strong>: CSS transitions should suffice for a damn dropdown.</li>
+<li><strong>Ditched support for crusty old browsers</strong>: Specifically, IE8 and earlier. Still, Selectron detects if there's an unsupported JS feature (Object.create()) and bails without ruining anything.</li>
+<li><strong>Complete code overhaul</strong>: cleaner code, faster performance, and a few bonuses:
+<ul>
+<li><strong>JQuery version requirement dropped to 1.7.0</strong>... somehow in the process.</li>
+<li>Removed an unused, ill-advised, oddball setting that relied on a global variable</li>
+<li>Removed direct application of CSS to the Selectron and its list. Classes are just fine.</li>
+<li>Much more readable, easier to reason about code structure, playing to the strengths of JS' prototype delegation object model</li>
+</ul></li>
+</ul>
+<h2 id="demo">Demo</h2>
+<h3 id="these-first-two-are-activated-via-js-manually">These first two are activated via JS manually</h3>
+<h4 id="acoupleselects.selectron"><code>$(&quot;#aCoupleSelects&quot;).selectron();</code></h4>
+<ul>
+<li>The first one has a wider initial value, so it is wider. It's Time... To Select Account Anuity Banking Insurance Life Insurance Mortgage Mutual Funds Retirement Plans</li>
+<li>Select Account Anuity Banking Insurance Life Insurance Mortgage Mutual Funds Retirement Plans Also note how they flow with the text with default &quot;core&quot; styles.</li>
+</ul>
+<h3 id="additional-selects-activated-through-html5-attribute-data-selectron">Additional <code>select</code>s, activated through HTML5 attribute &quot;<code>data-selectron</code>&quot;</h3>
+<h4 id="select-nameuniquename-data-selectronoptions..."><code>&lt;select name=&quot;uniqueName&quot; data-selectron='{{options}}'&gt;...</code></h4>
+<ul>
+<li>Default<br />
+ <code>&lt;select name=&quot;account2&quot; data-selectron&gt;</code><br />
+ Select Account 2 Anuity Banking Insurance Life Insurance Mortgage Mutual Funds Retirement Plans</li>
+<li>Inherit Width from <code>&lt;select&gt;</code> <code>&lt;select name=&quot;account4&quot; data-selectron='{&quot;inheritWidth&quot;: true}'&gt;</code><br />
+ Auto! Anuity Banking Insurance Life Insurance Mortgage Mutual Funds Retirement Plans</li>
+<li>Inherit Width again, this time with specified width on <code>&lt;select&gt;</code><br />
+ <code>&lt;select name=&quot;account5&quot; style=&quot;width: 250px;&quot; data-selectron='{&quot;inheritWidth&quot;: true}'&gt;</code><br />
+ SELECT! Inherit Width Anuity Banking Insurance Life Insurance Mortgage Mutual Funds Retirement Plans</li>
+</ul>
+<h2 id="the-future">The Future</h2>
+<p>?</p>

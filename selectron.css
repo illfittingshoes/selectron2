@@ -1,0 +1,180 @@
+/* Selectron example HTML: 
+
+	<div class="selectron" data-select="account">
+		<div class="selectron__selected">
+      <div class="selectron__selected__inner">
+        This is the Selected Option<span class="selectron__selected__indicator"></span>
+      </div>
+    </div>
+		<div class="selectron__listWrapper">
+			<ul class="selectron__list">
+				<li class="selectron__li" data-index="0"><span class="selectron__li__inner">Select Account</span></li>
+				<li class="selectron__li" data-index="1"><span class="selectron__li__inner">An Option</span></li>
+				<li class="selectron__li" data-index="2"><span class="selectron__li__inner">Another Option</span></li>
+				<li class="selectron__li" data-index="3"><span class="selectron__li__inner">Something Else</span></li>
+				<li class="selectron__li" data-index="4"><span class="selectron__li__inner">Further Optionness</span></li>
+				<li class="selectron__li" data-index="5"><span class="selectron__li__inner">A Thing you can Choose</span></li>
+				<li class="selectron__li selectron__li--selected" data-index="6"><span class="selectron__li__inner">This is the Selected Option</span></li>
+				<li class="selectron__li" data-index="7"><span class="selectron__li__inner">One Last Option for the Road</span></li>
+			</ul>
+		</div>
+	</div>
+
+/*!***************************/
+/*  Selectron Core Styles    */
+/*  modify at your own risk! */
+/*!***************************/
+.selectron,
+.selectron * {
+  box-sizing: border-box;
+}
+.selectron {
+  display: inline-block;
+  vertical-align: middle;
+}
+.selectron__selected {
+  display: block;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  /* offset top and bottom margin by total top & bottom border to fix inline text alignment */
+  margin: -2px 0 2px;
+}
+.selectron__selected__inner {
+  overflow: hidden;
+}
+.selectron__listWrapper {
+  display: none;
+  position: relative;
+  /* offset top by total .selectron__selected top & bottom border to fix inline text alignment */
+  top: -2px;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* TODO: Remember why this is here */
+.selectron__listWrapper::before {
+  position: absolute;
+  display: none;
+}
+
+.selectron__list {
+  width: 100%;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  /* margin: 0 !important;
+  padding: 0 !important; */
+}
+.selectron__li {
+  display: block;
+  list-style: none;
+}
+.selectron__li__inner {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Shown/Open state */
+.selectron--shown .selectron__listWrapper {
+  display: block;
+}
+
+/*****************************/
+/* End Selectron Core Styles */
+/*****************************/
+
+
+/*************************************/
+/* Selectron Theme Styles - go nuts! */
+/*************************************/
+/* TODO: improve contrast */
+
+.selectron {
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  user-select: none;
+  height: 40px;
+  line-height: 40px;
+  color: #333;
+  text-decoration: none;
+}
+.selectron__selected {
+  border: 1px solid #e7e7e7;
+  border-radius: 5px;
+  background: #fff;
+  padding: 0 20px 0 10px;
+}
+
+.selectron__selected__indicator {
+  position: absolute;
+  left:100%;
+  background:#333;
+}
+
+.selectron__selected__indicator::before {
+  position: absolute;
+  left:100%;
+  margin-left: -10px;
+  position: absolute;
+  transform: rotate(90deg);
+  content:'\203A';
+  transition: transform 150ms ease;
+}
+
+.selectron--shown .selectron__selected__indicator::before {
+  transform: rotate(-90deg) translateY(-3.5px);
+
+}
+
+.selectron--focused .selectron__selected {
+  background: #f9f9f9;
+}
+.selectron--shown .selectron__selected {
+  border-radius: 5px 5px 0 0;
+  border-bottom: none;
+}
+
+.selectron__listWrapper:before {
+  background: #fff;
+  border-left: 1px solid #e7e7e7;
+  border-right: 1px solid #e7e7e7;
+  height: 5px;
+  top: -5px;
+  width: 100%;
+}
+.selectron--focused .selectron__listWrapper:before {
+  background: #f9f9f9;
+}
+.selectron__list {
+  background: #fff;
+  border-left: 1px solid #e7e7e7;
+  border-right: 1px solid #e7e7e7;
+  border-bottom: 1px solid #e7e7e7;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.selectron__li {
+  color: #000;
+  border-top: 1px dotted #e7e7e7;
+  padding: 0;
+}
+.selectron__li:first-child {
+  border-top: 1px solid #e7e7e7;
+}
+.selectron__li__inner {
+  padding: 10px 10px;
+}
+.selectron__li:hover .selectron__li__inner {
+  background: #f9f9f9;
+}
+.selectron__li--selected .selectron__li__inner {
+  background: #eee;
+}
+
+
+
+/******************************/
+/* End Selectron Theme Styles */
+/******************************/
